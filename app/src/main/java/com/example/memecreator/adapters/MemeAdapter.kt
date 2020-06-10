@@ -52,6 +52,13 @@ class MemeAdapter : RecyclerView.Adapter<MemeAdapter.MemeViewHolder>() {
                 }
             }
         }
+    }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 }

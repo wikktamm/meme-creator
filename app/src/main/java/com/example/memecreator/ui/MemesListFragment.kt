@@ -56,10 +56,10 @@ class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
     }
 
     private fun showProgressBar() {
-//todo
+        progressBar.visibility = View.VISIBLE
     }
 
     private fun hideProgressBar() {
-//todo
+        progressBar.visibility = View.INVISIBLE
     }
 }
