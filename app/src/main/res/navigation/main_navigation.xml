@@ -6,7 +6,13 @@
     <fragment
         android:id="@+id/memeEditorFragment"
         android:name="com.example.memecreator.ui.MemeEditorFragment"
-        android:label="MemeEditorFragment" />
+        android:label="MemeEditorFragment" >
+        <argument
+            android:name="meme"
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="com.example.memecreator.db.models.meme.Meme" />
+    </fragment>
     <fragment
         android:id="@+id/memesListFragment"
         android:name="com.example.memecreator.ui.MemesListFragment"

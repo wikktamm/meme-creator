@@ -2,9 +2,12 @@ package com.example.memecreator.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.memecreator.R
 import com.example.memecreator.adapters.MemeAdapter
 import com.example.memecreator.db.models.meme.MemesResponse
@@ -43,7 +46,12 @@ class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
         adapter = MemeAdapter()
         rvApiMemes.also {
             it.adapter = adapter
-            it.layoutManager = GridLayoutManager(activity, 2)
+            it.layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
+        }
+        adapter.setOnMemeLongClickListener {
+            val bundle = Bundle()
+            bundle.putSerializable("meme", it)
+            findNavController().navigate(R.id.action_memesListFragment_to_memeEditorFragment, bundle)
         }
     }
 

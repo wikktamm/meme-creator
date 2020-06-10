@@ -11,10 +11,16 @@ import com.example.memecreator.R
 import com.example.memecreator.db.models.meme.Meme
 import kotlinx.android.synthetic.main.row_meme.view.*
 
-class MemeAdapter :RecyclerView.Adapter<MemeAdapter.MemeViewHolder>() {
+class MemeAdapter : RecyclerView.Adapter<MemeAdapter.MemeViewHolder>() {
     inner class MemeViewHolder(val item: View) : RecyclerView.ViewHolder(item)
 
-    val differCallback = object : DiffUtil.ItemCallback<Meme>(){
+    private var onMemeLongClickListener: ((Meme) -> Unit)? = null
+
+    fun setOnMemeLongClickListener(func: ((Meme) -> Unit)) {
+        onMemeLongClickListener = func
+    }
+
+    val differCallback = object : DiffUtil.ItemCallback<Meme>() {
         override fun areItemsTheSame(oldItem: Meme, newItem: Meme): Boolean {
             return oldItem == newItem
         }
@@ -31,11 +37,21 @@ class MemeAdapter :RecyclerView.Adapter<MemeAdapter.MemeViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
-        return MemeViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_meme, parent, false))
+        return MemeViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.row_meme, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: MemeViewHolder, position: Int) {
         val currentMeme = diffUtil.currentList[position]
-        holder.item.ivMeme.load(currentMeme.url)
+        holder.item.apply {
+            ivMeme.load(currentMeme.url)
+            setOnClickListener {
+                onMemeLongClickListener?.let {
+                    it(currentMeme)
+                }
+            }
+        }
+
     }
 }
