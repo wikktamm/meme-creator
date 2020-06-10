@@ -20,7 +20,6 @@ import java.io.File
 class MemeViewModel(val repo: MemeRepository, application: Application) : AndroidViewModel(application) {
     val memesData: MutableLiveData<Resource<MemesResponse>> = MutableLiveData()
     val chosenMeme: MutableLiveData<Meme> = MutableLiveData()
-    val savingMeme:MutableLiveData<Resource<Any>> = MutableLiveData(Resource.None())
 
     fun getAllMemes() = viewModelScope.launch {
         memesData.postValue(Resource.Loading())
@@ -48,7 +47,7 @@ class MemeViewModel(val repo: MemeRepository, application: Application) : Androi
         file: File
     ) {
         viewModelScope.launch {
-            savingMeme.postValue(Resource.Loading())
+//            savingMeme.postValue(Resource.Loading())
             val response = repo.saveMemeInternally(photoEditor, photoEditorView, file)
             getApplication<Application>().sendBroadcast(
                 Intent(
@@ -56,7 +55,7 @@ class MemeViewModel(val repo: MemeRepository, application: Application) : Androi
                     Uri.fromFile(file)
                 )
             )
-            savingMeme.postValue(response)
+//            savingMeme.postValue(response)
         }
 
     }
