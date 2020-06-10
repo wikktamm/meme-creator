@@ -4,11 +4,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,29 +16,44 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.memecreator.R
+import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.tools_editing.TextEditorDialogFragment
 import com.example.memecreator.tools_editing.TextEditorDialogFragment.TextEditor
+import com.example.memecreator.utils.Constants.READ_WRITE_STORAGE
+import com.example.memecreator.utils.Resource
+import com.example.memecreator.utils.showSnackBar
 import com.example.memecreator.viewmodels.MemeViewModel
 import ja.burhanrashid52.photoeditor.PhotoEditor
-import ja.burhanrashid52.photoeditor.PhotoEditor.OnSaveListener
-import ja.burhanrashid52.photoeditor.SaveSettings
 import ja.burhanrashid52.photoeditor.TextStyleBuilder
 import kotlinx.android.synthetic.main.fragment_meme_editor.*
 import java.io.File
 
 
 class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
-    lateinit var viewModel: MemeViewModel
+    private lateinit var viewModel: MemeViewModel
     lateinit var photoEditor: PhotoEditor
-    val args: MemeEditorFragmentArgs by navArgs()
+    private val args: MemeEditorFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = (activity as MemeActivity).viewModel
-
         viewModel.chosenMeme.observe(viewLifecycleOwner, Observer {
             photoEditorView.source.load(it.url)
-
         })
+
+//        viewModel.savingMeme.observe(viewLifecycleOwner, Observer {
+//            when (it) {
+//                is Resource.Success -> {
+//                    hideProgressBar()
+//                    showSnackBar(R.string.meme_saved_succesfully, rootView)
+//                }
+//                is Resource.Error -> {
+//                    hideProgressBar()
+//                    showSnackBar(R.string.meme_failed_to_save, rootView)
+//                }
+//                is Resource.Loading -> showProgressBar()
+//                is Resource.None -> hideProgressBar()
+//            }
+//        })
         args.meme?.let {
             viewModel.rememberChosenMeme(it)
         }
@@ -48,6 +61,13 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
         setupPhotoEditorListeners()
     }
 
+    private fun hideProgressBar() {
+        progressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+    }
 
     private fun setupPhotoEditor() {
         val mTextRobotoTf = ResourcesCompat.getFont(requireContext(), R.font.roboto_medium)
@@ -55,7 +75,6 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
             .setPinchTextScalable(true)
             .setDefaultTextTypeface(mTextRobotoTf)
             .build()
-
     }
 
     private fun setupPhotoEditorListeners() {
@@ -79,68 +98,33 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
         menuItemSave.setOnClickListener {
             saveImage()
         }
-    }
-
-    var mSaveImageUri: Uri? = null
-
-    @SuppressLint("MissingPermission")
-    private fun saveImage() {
-        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//            showLoading("Saving...")
-//            val path =
-//                File(requireContext().filesDir, "Meme_creator" + File.separator + "Images")
-//            if (!path.exists()) {
-//                path.mkdirs()
-//            }
-//            val file = File(path, System.currentTimeMillis().toString() + ".jpeg")
-            val file = File(
-                Environment.getExternalStorageDirectory()
-                    .toString() + File.separator + ""
-                        + System.currentTimeMillis() + ".png")
-            try {
-                val saveSettings = SaveSettings.Builder()
-                    .setClearViewsEnabled(true)
-                    .setTransparencyEnabled(true)
-                    .build()
-                photoEditor.saveAsFile(
-                    file.absolutePath,
-                    saveSettings,
-                    object : OnSaveListener {
-                        override fun onSuccess(imagePath: String) {
-//                            hideLoading()
-//                            showSnackbar("Image Saved Successfully")
-                            Log.d("dupa", "brawo" + imagePath)
-
-                            mSaveImageUri = Uri.fromFile(File(imagePath))
-                            photoEditorView.source.setImageURI(mSaveImageUri)
-                            context!!.sendBroadcast(
-                                Intent(
-                                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                    Uri.fromFile(file)
-                                )
-                            )
-
-                        }
-
-                        override fun onFailure(exception: Exception) {
-//                            hideLoading()
-                            Log.d("dupa", exception.toString())
-
-//                            showSnackbar("Failed to save Image")
-                        }
-                    })
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                Log.d("dupa", "nie wyszlo")
-                Log.d("dupa2", e.toString())
-
-//                hideLoading()
-//                showSnackbar(e.getMessage())
-            }
+        menuItemShare.setOnClickListener {
+            //todo
         }
     }
 
-    val READ_WRITE_STORAGE = 52
+    @SuppressLint("MissingPermission")
+    private fun saveImage() { //todo here
+        if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            val file = File(
+                Environment.getExternalStorageDirectory()
+                    .toString() + File.separator
+                        + System.currentTimeMillis() + ".png"
+            )
+            viewModel.saveMemeInternally(photoEditor, photoEditorView, file)
+        }
+    }
+
+//    private fun shareImage() {
+//        if (mSaveImageUri == null) {
+//            return
+//        }
+//        val intent = Intent(Intent.ACTION_SEND)
+//        intent.type = "image/*"
+//        intent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(mSaveImageUri))
+//        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)))
+//    }
+
     private fun requestPermission(permission: String): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val isGranted =
@@ -172,9 +156,8 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
         }
     }
 
-    private fun isPermissionGranted(b: Boolean, s: String?) {
-        if (b) saveImage()
+    private fun isPermissionGranted(permissionGranted: Boolean, s: String?) {
+        if (permissionGranted) saveImage()
     }
-
 }
 

@@ -17,15 +17,29 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        app:menu_colorPressed="@color/colorLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:menu_colorNormal="@color/colorPrimary">
+        app:menu_colorNormal="@color/colorPrimary"
+        app:menu_colorPressed="@color/colorLight">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menuItemText"
@@ -76,8 +90,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_save"
             app:fab_colorNormal="@color/colorAccent"
-            fab:fab_label="Save"
             app:fab_colorPressed="@color/colorLight"
+            fab:fab_label="Save"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 
