@@ -17,23 +17,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imgGallery"-->
-<!--        android:layout_width="@dimen/top_tool_icon_width"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@color/semi_black_transparent"-->
-<!--        android:padding="8dp"-->
-<!--        android:src="@drawable/ic_gallery"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        app:menu_colorPressed="@color/colorLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu_colorNormal="@color/colorPrimary">
@@ -44,7 +33,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_text"
             app:fab_colorNormal="@color/colorAccent"
-
+            app:fab_colorPressed="@color/colorLight"
             fab:fab_label="Add text"
             fab:fab_size="mini" />
 
@@ -54,6 +43,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_undo"
             app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorLight"
 
             fab:fab_label="Undo"
             fab:fab_size="mini" />
@@ -64,6 +54,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_redo"
             app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorLight"
 
             fab:fab_label="Redo"
             fab:fab_size="mini" />
@@ -74,6 +65,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_share"
             app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorLight"
 
             fab:fab_label="Share"
             fab:fab_size="mini" />
@@ -85,6 +77,7 @@
             android:src="@drawable/ic_save"
             app:fab_colorNormal="@color/colorAccent"
             fab:fab_label="Save"
+            app:fab_colorPressed="@color/colorLight"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 

@@ -101,6 +101,15 @@ class ColorPickerAdapter(
                 R.color.blue_color_picker
             ))
             colorPickerColors.add(ContextCompat.getColor(context,
+                R.color.black
+            ))
+            colorPickerColors.add(ContextCompat.getColor(context,
+                R.color.white
+            ))
+            colorPickerColors.add(ContextCompat.getColor(context,
+                R.color.yellow_color_picker
+            ))
+            colorPickerColors.add(ContextCompat.getColor(context,
                 R.color.brown_color_picker
             ))
             colorPickerColors.add(ContextCompat.getColor(context,
@@ -112,9 +121,7 @@ class ColorPickerAdapter(
             colorPickerColors.add(ContextCompat.getColor(context,
                 R.color.red_color_picker
             ))
-            colorPickerColors.add(ContextCompat.getColor(context,
-                R.color.black
-            ))
+
             colorPickerColors.add(ContextCompat.getColor(context,
                 R.color.red_orange_color_picker
             ))
@@ -123,12 +130,6 @@ class ColorPickerAdapter(
             ))
             colorPickerColors.add(ContextCompat.getColor(context,
                 R.color.violet_color_picker
-            ))
-            colorPickerColors.add(ContextCompat.getColor(context,
-                R.color.white
-            ))
-            colorPickerColors.add(ContextCompat.getColor(context,
-                R.color.yellow_color_picker
             ))
             colorPickerColors.add(
                 ContextCompat.getColor(

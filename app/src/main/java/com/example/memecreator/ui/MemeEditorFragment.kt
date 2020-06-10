@@ -34,7 +34,6 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor)
         }
         setupPhotoEditor()
         setupPhotoEditorListeners()
-
     }
 
     private fun setupPhotoEditor() {
@@ -54,7 +53,6 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor)
                     val styleBuilder = TextStyleBuilder()
                     styleBuilder.withTextColor(colorCode)
                     photoEditor.addText(inputText, styleBuilder)
-                    //txtCurrentTool.setText(R.string.label_text)
                 }
             })
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/memesListFragment" android:title="List"/>
-    <item android:id="@+id/memeEditorFragment" android:title="Editor"/>
-    <item android:id="@+id/savedMemesFragment" android:title="Saved"/>
+    <item android:id="@+id/memesListFragment" android:title="List" android:icon="@drawable/ic_list"/>
+    <item android:id="@+id/memeEditorFragment" android:title="Editor" android:icon="@drawable/ic_brush"/>
+    <item android:id="@+id/savedMemesFragment" android:title="Saved" android:icon="@drawable/ic_love"/>
 </menu>
