@@ -1,11 +1,11 @@
 package com.example.memecreator.db.models.meme
 
-import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "memes")
-data class MemeLocal(val uri: Uri, val name:String) {
+data class MemeLocal( val uri: String) : Serializable{
     @PrimaryKey(autoGenerate = true)
     var id:Int?=null
 }

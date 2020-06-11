@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import coil.api.load
@@ -40,20 +41,22 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
             photoEditorView.source.load(it.url)
         })
 
-//        viewModel.savingMeme.observe(viewLifecycleOwner, Observer {
-//            when (it) {
-//                is Resource.Success -> {
-//                    hideProgressBar()
-//                    showSnackBar(R.string.meme_saved_succesfully, rootView)
-//                }
-//                is Resource.Error -> {
-//                    hideProgressBar()
-//                    showSnackBar(R.string.meme_failed_to_save, rootView)
-//                }
-//                is Resource.Loading -> showProgressBar()
-//                is Resource.None -> hideProgressBar()
-//            }
-//        })
+        viewModel.savingMemeResult.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Success -> {
+                    hideProgressBar()
+                    showSnackBar(R.string.meme_saved_succesfully, rootView)
+                    viewModel.savingMemeResult.postValue(Resource.None())
+                }
+                is Resource.Error -> {
+                    hideProgressBar()
+                    showSnackBar(R.string.meme_failed_to_save, rootView)
+                    viewModel.savingMemeResult.postValue(Resource.None())
+                }
+                is Resource.Loading -> showProgressBar()
+                is Resource.None -> hideProgressBar()
+            }
+        })
         args.meme?.let {
             viewModel.rememberChosenMeme(it)
         }
