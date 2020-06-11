@@ -11,8 +11,8 @@ abstract class MemesDatabase : RoomDatabase() {
     abstract fun getMemesDao(): MemesDao
 
     companion object {
-        var instance: MemesDatabase? = null
-        val LOCK = Any()
+        private var instance: MemesDatabase? = null
+        private val LOCK = Any()
         operator fun invoke(context: Context) =
             instance ?: synchronized(LOCK) {
                 instance ?: createDatabase(context).also { instance = it }

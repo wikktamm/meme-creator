@@ -1,14 +1,13 @@
 package com.example.memecreator.viewmodels
 
-import android.R
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
-import android.provider.Settings.Global.getString
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -16,6 +15,7 @@ import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.db.models.meme.MemeLocal
 import com.example.memecreator.db.models.meme.MemesResponse
 import com.example.memecreator.repositories.MemeRepository
+import com.example.memecreator.utils.Constants.FORMAT_SAVED_MEME
 import com.example.memecreator.utils.Resource
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditorView
@@ -32,7 +32,7 @@ class MemeViewModel(private val repo: MemeRepository, application: Application) 
 
     fun getAllSavedMemes() = repo.getSavedMemes()
 
-    fun deleteMeme(meme:MemeLocal){
+    fun deleteMeme(meme: MemeLocal) {
         viewModelScope.launch {
             repo.deleteMeme(meme)
         }
@@ -58,13 +58,17 @@ class MemeViewModel(private val repo: MemeRepository, application: Application) 
     }
 
     @SuppressLint("MissingPermission")
-    fun saveMemeInternally(
+    fun saveMemeExternally(
         photoEditor: PhotoEditor,
-        photoEditorView: PhotoEditorView,
-        file: File
+        photoEditorView: PhotoEditorView
     ) {
+        val file = File(
+            getApplication<Application>().getExternalFilesDir(null)!!.absolutePath.toString()
+                    + File.separator
+                    + System.currentTimeMillis() + FORMAT_SAVED_MEME
+        )
         viewModelScope.launch {
-            repo.saveMemeInternally(
+            repo.saveMemeExternally(
                 photoEditor,
                 photoEditorView,
                 file
@@ -72,19 +76,37 @@ class MemeViewModel(private val repo: MemeRepository, application: Application) 
                 when (wasSuccess) {
                     true -> {
                         viewModelScope.launch {
-                            repo.saveMemeLocally(MemeLocal(uri!!))
-
-                        savingMemeResult.postValue(Resource.Success(Any()))
-                        getApplication<Application>().sendBroadcast(
-                            Intent(
-                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                Uri.fromFile(file)
-                            )
-                        )}
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                val contentValues = ContentValues().apply {
+                                    put(
+                                        MediaStore.MediaColumns.DISPLAY_NAME,
+                                        System.currentTimeMillis().toString()
+                                    )
+                                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                                    put(MediaStore.MediaColumns.IS_PENDING, 1)
+                                }
+                                getApplication<Application>().contentResolver.update(
+                                    Uri.parse(uri),
+                                    contentValues,
+                                    null,
+                                    null
+                                )
+                            } else {
+                                repo.saveMemeLocally(MemeLocal(uri!!))
+                                savingMemeResult.postValue(Resource.Success(Any()))
+                                getApplication<Application>().sendBroadcast(
+                                    Intent(
+                                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(file)
+                                    )
+                                )
+                            }
+                        }
                     }
                     false -> savingMemeResult.postValue(Resource.Error(Any(), ""))
                 }
             }
         }
+
     }
 }

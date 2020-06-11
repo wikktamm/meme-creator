@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memecreator.R
 import com.example.memecreator.db.models.meme.MemeTemplate
 
-
 abstract class MemeAdapterTemplate : RecyclerView.Adapter<MemeAdapterTemplate.MemeViewHolder>() {
     inner class MemeViewHolder(val item: View) : RecyclerView.ViewHolder(item)
 
@@ -40,18 +39,6 @@ abstract class MemeAdapterTemplate : RecyclerView.Adapter<MemeAdapterTemplate.Me
             LayoutInflater.from(parent.context).inflate(R.layout.row_meme, parent, false)
         )
     }
-
-//    override fun onBindViewHolder(holder: MemeViewHolder, position: Int) {
-//        val currentMeme = diffUtil.currentList[position]
-//        holder.item.apply {
-//            ivMeme.load(currentMeme.url)
-//            setOnClickListener {
-//                onMemeClickListener?.let {
-//                    it(currentMeme)
-//                }
-//            }
-//        }
-//    }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()

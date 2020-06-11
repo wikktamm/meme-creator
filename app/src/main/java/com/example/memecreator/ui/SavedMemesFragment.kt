@@ -48,17 +48,17 @@ class SavedMemesFragment : Fragment(R.layout.fragment_saved_memes) {
     }
 
     private fun showDialog(meme: MemeTemplate) {
-        val clickedMeme = meme as MemeLocal
+        val memeLocal = meme as MemeLocal
         val view = layoutInflater.inflate(R.layout.row_meme, null)
-        view.ivMeme.load(clickedMeme.uri)
+        view.ivMeme.load(memeLocal.uri)
         AlertDialog.Builder(requireActivity())
             .setView(view)
             .setNeutralButton(getString(R.string.close)) { dialogInterface, _ -> dialogInterface.dismiss() }
             .setPositiveButton(getString(R.string.share)) { _, _ ->
-                perfomShareOperation(clickedMeme.uri)
+                performShareOperation(memeLocal.uri)
             }
             .setNegativeButton(getString(R.string.delete)) { _, _ ->
-                viewModel.deleteMeme(clickedMeme)
+                viewModel.deleteMeme(memeLocal)
             }
             .create().show()
     }
@@ -71,7 +71,7 @@ class SavedMemesFragment : Fragment(R.layout.fragment_saved_memes) {
         progressBar.visibility = View.INVISIBLE
     }
 
-    private fun perfomShareOperation(savedMemeUri: String) {
+    private fun performShareOperation(savedMemeUri: String) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(savedMemeUri))

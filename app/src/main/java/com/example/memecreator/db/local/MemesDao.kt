@@ -1,9 +1,7 @@
 package com.example.memecreator.db.local
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
-import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.db.models.meme.MemeLocal
 
 @Dao

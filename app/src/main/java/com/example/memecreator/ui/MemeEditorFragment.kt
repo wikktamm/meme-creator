@@ -2,22 +2,18 @@ package com.example.memecreator.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.example.memecreator.R
-import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.tools_editing.TextEditorDialogFragment
 import com.example.memecreator.tools_editing.TextEditorDialogFragment.TextEditor
 import com.example.memecreator.utils.Constants.READ_WRITE_STORAGE
@@ -27,8 +23,6 @@ import com.example.memecreator.viewmodels.MemeViewModel
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.TextStyleBuilder
 import kotlinx.android.synthetic.main.fragment_meme_editor.*
-import kotlinx.android.synthetic.main.row_meme.*
-import java.io.File
 
 class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
     private lateinit var viewModel: MemeViewModel
@@ -107,26 +101,11 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
     }
 
     @SuppressLint("MissingPermission")
-    private fun saveImage() { //todo here
+    private fun saveImage() {
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            val file = File(
-                Environment.getExternalStorageDirectory()
-                    .toString() + File.separator
-                        + System.currentTimeMillis() + ".png"
-            )
-            viewModel.saveMemeInternally(photoEditor, photoEditorView, file)
+            viewModel.saveMemeExternally(photoEditor, photoEditorView)
         }
     }
-
-//    private fun shareImage() {
-//        if (mSaveImageUri == null) {
-//            return
-//        }
-//        val intent = Intent(Intent.ACTION_SEND)
-//        intent.type = "image/*"
-//        intent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(mSaveImageUri))
-//        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)))
-//    }
 
     private fun requestPermission(permission: String): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -153,13 +132,12 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
     ) {
         when (requestCode) {
             READ_WRITE_STORAGE -> isPermissionGranted(
-                grantResults[0] == PackageManager.PERMISSION_GRANTED,
-                permissions[0]
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
             )
         }
     }
 
-    private fun isPermissionGranted(permissionGranted: Boolean, s: String?) {
+    private fun isPermissionGranted(permissionGranted: Boolean) {
         if (permissionGranted) saveImage()
     }
 }

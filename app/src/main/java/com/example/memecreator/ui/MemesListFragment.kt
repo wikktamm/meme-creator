@@ -10,13 +10,14 @@ import com.example.memecreator.R
 import com.example.memecreator.adapters.MemeAdapter
 import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.db.models.meme.MemesResponse
+import com.example.memecreator.utils.Constants.ARGS_KEY_MEME
 import com.example.memecreator.utils.Resource
 import com.example.memecreator.viewmodels.MemeViewModel
 import kotlinx.android.synthetic.main.fragment_memes_list.*
 
 class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
-    lateinit var adapter : MemeAdapter
-    lateinit var viewModel : MemeViewModel
+    private lateinit var adapter : MemeAdapter
+    private lateinit var viewModel : MemeViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = (activity as MemeActivity).viewModel
@@ -31,7 +32,6 @@ class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
                     }
                     is Resource.Error -> {
                         hideProgressBar()
-                        //todo
                     }
                     is Resource.Loading -> {
                         showProgressBar()
@@ -49,7 +49,7 @@ class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
         }
         adapter.setOnMemeClickListener {
             val bundle = Bundle()
-            bundle.putSerializable("meme", it as Meme)
+            bundle.putSerializable(ARGS_KEY_MEME, it as Meme)
             findNavController().navigate(R.id.action_memesListFragment_to_memeEditorFragment, bundle)
         }
     }

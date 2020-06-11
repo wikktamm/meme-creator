@@ -2,6 +2,7 @@ package com.example.memecreator.repositories
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import com.example.memecreator.db.api.RetrofitInstance
 import com.example.memecreator.db.local.MemesDatabase
@@ -26,11 +27,12 @@ class MemeRepository(val database: MemesDatabase) {
     }
 
     @SuppressLint("MissingPermission")
-    fun saveMemeInternally(
+    fun saveMemeExternally(
         photoEditor: PhotoEditor,
         photoEditorView: PhotoEditorView,
         file: File, onFinishCallback: (success:Boolean, uri:String?) -> Unit
     ){
+
         var wasSuccess: Boolean
         var memeUriString: String
         try {
