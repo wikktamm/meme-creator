@@ -35,7 +35,6 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu_colorNormal="@color/colorPrimary"
@@ -58,7 +57,6 @@
             android:src="@drawable/ic_undo"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorLight"
-
             fab:fab_label="Undo"
             fab:fab_size="mini" />
 
@@ -69,7 +67,6 @@
             android:src="@drawable/ic_redo"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorLight"
-
             fab:fab_label="Redo"
             fab:fab_size="mini" />
 

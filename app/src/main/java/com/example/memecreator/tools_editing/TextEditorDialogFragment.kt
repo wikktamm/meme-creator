@@ -53,6 +53,8 @@ class TextEditorDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.add_text_dialog, container, false)
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAddTextEditText = view.findViewById(R.id.add_text_edit_text)

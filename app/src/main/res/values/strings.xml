@@ -7,7 +7,7 @@
     <string name="share">Share</string>
     <string name="delete">Delete</string>
     <string name="share_meme_via">Share meme via</string>
-    <string name="prompt_sure_about_deleting">Do you want to delete this meme? It will stay in your phone\'s gallery anyway.</string>
+    <string name="prompt_sure_about_deleting">Do you want to delete this meme? It will stay in your device gallery anyway.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>

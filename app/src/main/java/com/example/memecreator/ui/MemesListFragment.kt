@@ -29,6 +29,7 @@ class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
                     is Resource.Success -> {
                         hideProgressBar()
                         adapter.diffUtil.submitList(resource.body?.data?.memes)
+
                     }
                     is Resource.Error -> {
                         hideProgressBar()

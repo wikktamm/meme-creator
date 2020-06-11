@@ -2,11 +2,15 @@ package com.example.memecreator.viewmodels
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,6 +26,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.File
+import java.io.OutputStream
 
 
 class MemeViewModel(private val repo: MemeRepository, application: Application) :
@@ -60,54 +65,55 @@ class MemeViewModel(private val repo: MemeRepository, application: Application) 
     @SuppressLint("MissingPermission")
     fun saveMemeExternally(
         photoEditor: PhotoEditor,
-        photoEditorView: PhotoEditorView
+        photoEditorView: PhotoEditorView,
+        imageView2Bitmap: Bitmap
     ) {
         val file = File(
-            getApplication<Application>().getExternalFilesDir(null)!!.absolutePath.toString()
+            Environment.getExternalStorageDirectory().toString()
                     + File.separator
                     + System.currentTimeMillis() + FORMAT_SAVED_MEME
         )
         viewModelScope.launch {
-            repo.saveMemeExternally(
-                photoEditor,
-                photoEditorView,
-                file
-            ) { wasSuccess, uri ->
-                when (wasSuccess) {
-                    true -> {
-                        viewModelScope.launch {
-                            //not sure about it
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                val contentValues = ContentValues().apply {
-                                    put(
-                                        MediaStore.MediaColumns.DISPLAY_NAME,
-                                        System.currentTimeMillis().toString()
-                                    )
-                                    put(MediaStore.MediaColumns.MIME_TYPE, INTENT_SEND_IMAGE_TYPE)
-                                    put(MediaStore.MediaColumns.IS_PENDING, 1)
-                                }
-                                getApplication<Application>().contentResolver.update(
-                                    Uri.parse(uri),
-                                    contentValues,
-                                    null,
-                                    null
-                                )
-                            } else {
+            //not sure about it
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = getApplication<Application>().contentResolver;
+                val contentValues = ContentValues()
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis())
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + "IMAGE_FOLDER_NAME")
+                val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                val fos = imageUri?.let { resolver.openOutputStream(it) }!!
+                var saved = imageView2Bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                fos.flush()
+                fos.close()
+            } else {
+                Toast.makeText(getApplication(), "bbbb", Toast.LENGTH_SHORT).show()
+                repo.saveMemeExternally(
+                    photoEditor,
+                    photoEditorView,
+                    file
+                ) { wasSuccess, uri ->
+                    when (wasSuccess) {
+                        true -> {
+                            viewModelScope.launch {
+                                //not sure about it
                                 repo.saveMemeLocally(MemeLocal(uri!!))
                                 savingMemeResult.postValue(Resource.Success(Any()))
                                 getApplication<Application>().sendBroadcast(
                                     Intent(
                                         Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                        Uri.fromFile(file)
+                                        Uri.fromFile(file.absoluteFile)
                                     )
                                 )
                             }
                         }
+                        false -> savingMemeResult.postValue(Resource.Error(Any(), ""))
                     }
-                    false -> savingMemeResult.postValue(Resource.Error(Any(), ""))
                 }
             }
         }
 
     }
+
+
 }

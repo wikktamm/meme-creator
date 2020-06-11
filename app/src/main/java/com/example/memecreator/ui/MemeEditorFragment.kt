@@ -3,9 +3,12 @@ package com.example.memecreator.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -32,6 +35,15 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = (activity as MemeActivity).viewModel
+        setObservers()
+        args.meme?.let {
+            viewModel.rememberChosenMeme(it)
+        }
+        setupPhotoEditor()
+        setupPhotoEditorListeners()
+    }
+
+    private fun setObservers() {
         viewModel.chosenMeme.observe(viewLifecycleOwner, Observer {
             photoEditorView.source.load(it.url)
         })
@@ -52,11 +64,6 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
                 is Resource.None -> hideProgressBar()
             }
         })
-        args.meme?.let {
-            viewModel.rememberChosenMeme(it)
-        }
-        setupPhotoEditor()
-        setupPhotoEditorListeners()
     }
 
     private fun hideProgressBar() {
@@ -96,14 +103,18 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
         menuItemSave.setOnClickListener {
             saveImage()
         }
-
     }
 
     @SuppressLint("MissingPermission")
     private fun saveImage() {
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            viewModel.saveMemeExternally(photoEditor, photoEditorView)
+            viewModel.saveMemeExternally(photoEditor, photoEditorView, imageView2Bitmap(photoEditorView.source))
         }
+    }
+
+
+    private fun imageView2Bitmap(view: ImageView): Bitmap? {
+        return (view.drawable as BitmapDrawable).bitmap
     }
 
     private fun requestPermission(permission: String): Boolean {
