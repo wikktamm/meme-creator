@@ -2,10 +2,8 @@ package com.example.memecreator.db.local
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.db.models.meme.MemeLocal
 
 @Dao
@@ -14,4 +12,6 @@ interface MemesDao {
     suspend fun saveMeme(meme:MemeLocal)
     @Query("SELECT * FROM memes")
     fun getSavedMemes(): LiveData<List<MemeLocal>>
+    @Delete
+    suspend fun deleteMeme(meme: MemeLocal)
 }

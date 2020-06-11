@@ -21,6 +21,9 @@ class MemeRepository(val database: MemesDatabase) {
     suspend fun saveMemeLocally(meme: MemeLocal) {
         database.getMemesDao().saveMeme(meme)
     }
+    suspend fun deleteMeme(meme:MemeLocal){
+        database.getMemesDao().deleteMeme(meme)
+    }
 
     @SuppressLint("MissingPermission")
     fun saveMemeInternally(

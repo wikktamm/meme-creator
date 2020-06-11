@@ -1,18 +1,21 @@
 package com.example.memecreator.viewmodels
 
+import android.R
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
+import android.provider.Settings.Global.getString
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.memecreator.repositories.MemeRepository
 import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.db.models.meme.MemeLocal
 import com.example.memecreator.db.models.meme.MemesResponse
-import com.example.memecreator.ui.MemesListFragment
+import com.example.memecreator.repositories.MemeRepository
 import com.example.memecreator.utils.Resource
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditorView
@@ -20,14 +23,20 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.File
 
-class MemeViewModel(val repo: MemeRepository, application: Application) :
+
+class MemeViewModel(private val repo: MemeRepository, application: Application) :
     AndroidViewModel(application) {
     val memesData: MutableLiveData<Resource<MemesResponse>> = MutableLiveData()
-    val savedMemesData: MutableLiveData<List<MemeLocal>> = MutableLiveData()
     val chosenMeme: MutableLiveData<Meme> = MutableLiveData()
     val savingMemeResult: MutableLiveData<Resource<Any>> = MutableLiveData()
 
     fun getAllSavedMemes() = repo.getSavedMemes()
+
+    fun deleteMeme(meme:MemeLocal){
+        viewModelScope.launch {
+            repo.deleteMeme(meme)
+        }
+    }
 
     fun getAllMemes() = viewModelScope.launch {
         memesData.postValue(Resource.Loading())

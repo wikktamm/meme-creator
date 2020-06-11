@@ -3,4 +3,8 @@
     <string name="label_text">Text</string>
     <string name="meme_saved_succesfully">Meme saved successfully</string>
     <string name="meme_failed_to_save">Failed to save the meme, try again</string>
+    <string name="close">Close</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="share_meme_via">Share meme via</string>
 </resources>
