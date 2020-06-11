@@ -12,7 +12,7 @@ class MemeLocalAdapter : MemeAdapterTemplate() {
             ivMeme.load(currentMeme.uri)
             setOnClickListener {
                 onMyMemeClickListener?.let {
-//                    it(currentMeme)
+                    it(currentMeme)
                 }
             }
         }
