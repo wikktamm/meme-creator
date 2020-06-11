@@ -74,17 +74,6 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menuItemShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_share"
-            app:fab_colorNormal="@color/colorAccent"
-            app:fab_colorPressed="@color/colorLight"
-
-            fab:fab_label="Share"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menuItemSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

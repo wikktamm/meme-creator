@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -16,6 +15,7 @@ import com.example.memecreator.db.models.meme.MemeLocal
 import com.example.memecreator.db.models.meme.MemesResponse
 import com.example.memecreator.repositories.MemeRepository
 import com.example.memecreator.utils.Constants.FORMAT_SAVED_MEME
+import com.example.memecreator.utils.Constants.INTENT_SEND_IMAGE_TYPE
 import com.example.memecreator.utils.Resource
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditorView
@@ -76,13 +76,14 @@ class MemeViewModel(private val repo: MemeRepository, application: Application) 
                 when (wasSuccess) {
                     true -> {
                         viewModelScope.launch {
+                            //not sure about it
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                                 val contentValues = ContentValues().apply {
                                     put(
                                         MediaStore.MediaColumns.DISPLAY_NAME,
                                         System.currentTimeMillis().toString()
                                     )
-                                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                                    put(MediaStore.MediaColumns.MIME_TYPE, INTENT_SEND_IMAGE_TYPE)
                                     put(MediaStore.MediaColumns.IS_PENDING, 1)
                                 }
                                 getApplication<Application>().contentResolver.update(

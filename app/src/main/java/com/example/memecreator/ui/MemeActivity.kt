@@ -25,4 +25,8 @@ class MemeActivity : AppCompatActivity() {
         val factory = MemeViewModelFactory(repo, application)
         viewModel = ViewModelProvider(this, factory).get(MemeViewModel::class.java)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 }

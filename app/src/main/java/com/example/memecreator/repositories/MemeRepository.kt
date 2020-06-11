@@ -32,7 +32,6 @@ class MemeRepository(val database: MemesDatabase) {
         photoEditorView: PhotoEditorView,
         file: File, onFinishCallback: (success:Boolean, uri:String?) -> Unit
     ){
-
         var wasSuccess: Boolean
         var memeUriString: String
         try {

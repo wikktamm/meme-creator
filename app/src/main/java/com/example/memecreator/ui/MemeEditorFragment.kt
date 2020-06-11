@@ -24,6 +24,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.TextStyleBuilder
 import kotlinx.android.synthetic.main.fragment_meme_editor.*
 
+
 class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
     private lateinit var viewModel: MemeViewModel
     lateinit var photoEditor: PhotoEditor
@@ -95,9 +96,7 @@ class MemeEditorFragment : Fragment(R.layout.fragment_meme_editor) {
         menuItemSave.setOnClickListener {
             saveImage()
         }
-        menuItemShare.setOnClickListener {
-            //todo
-        }
+
     }
 
     @SuppressLint("MissingPermission")

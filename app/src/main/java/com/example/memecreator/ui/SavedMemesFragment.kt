@@ -1,7 +1,5 @@
 package com.example.memecreator.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -13,7 +11,7 @@ import com.example.memecreator.R
 import com.example.memecreator.adapters.MemeLocalAdapter
 import com.example.memecreator.db.models.meme.MemeLocal
 import com.example.memecreator.db.models.meme.MemeTemplate
-import com.example.memecreator.utils.Constants.INTENT_SEND_IMAGE_TYPE
+import com.example.memecreator.utils.performShareOperation
 import com.example.memecreator.viewmodels.MemeViewModel
 import kotlinx.android.synthetic.main.fragment_saved_memes.*
 import kotlinx.android.synthetic.main.row_meme.view.*
@@ -58,7 +56,7 @@ class SavedMemesFragment : Fragment(R.layout.fragment_saved_memes) {
                 performShareOperation(memeLocal.uri)
             }
             .setNegativeButton(getString(R.string.delete)) { _, _ ->
-                viewModel.deleteMeme(memeLocal)
+                askAboutDeleting { viewModel.deleteMeme(memeLocal) }
             }
             .create().show()
     }
@@ -71,11 +69,14 @@ class SavedMemesFragment : Fragment(R.layout.fragment_saved_memes) {
         progressBar.visibility = View.INVISIBLE
     }
 
-    private fun performShareOperation(savedMemeUri: String) {
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(savedMemeUri))
-        intent.type = INTENT_SEND_IMAGE_TYPE
-        startActivity(Intent.createChooser(intent, getString(R.string.share_meme_via)))
+    private fun askAboutDeleting(onYesClickedCallback: (()->Unit)) {
+        AlertDialog.Builder(requireActivity())
+            .setMessage(getString(R.string.prompt_sure_about_deleting))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                onYesClickedCallback.invoke()
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            }
+            .create().show()
     }
 }
