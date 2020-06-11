@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.memecreator.db.models.meme.MemeLocal
 
-@Database(entities = [MemeLocal::class], version = 2)
+@Database(entities = [MemeLocal::class], version = 3)
 abstract class MemesDatabase : RoomDatabase() {
     abstract fun getMemesDao(): MemesDao
 

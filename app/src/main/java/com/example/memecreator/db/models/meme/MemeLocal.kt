@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity(tableName = "memes")
-data class MemeLocal( val uri: String) : Serializable{
+data class MemeLocal(val uri: String) : MemeTemplate(uri), Serializable {
     @PrimaryKey(autoGenerate = true)
-    var id:Int?=null
+    var id: Int? = null
 }

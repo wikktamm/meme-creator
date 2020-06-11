@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.memecreator.R
 import com.example.memecreator.adapters.MemeAdapter
+import com.example.memecreator.db.models.meme.Meme
 import com.example.memecreator.db.models.meme.MemesResponse
 import com.example.memecreator.utils.Resource
 import com.example.memecreator.viewmodels.MemeViewModel
@@ -46,9 +47,9 @@ class MemesListFragment : Fragment(R.layout.fragment_memes_list) {
             it.adapter = adapter
             it.layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
         }
-        adapter.setOnMemeLongClickListener {
+        adapter.setOnMemeClickListener {
             val bundle = Bundle()
-            bundle.putSerializable("meme", it)
+            bundle.putSerializable("meme", it as Meme)
             findNavController().navigate(R.id.action_memesListFragment_to_memeEditorFragment, bundle)
         }
     }

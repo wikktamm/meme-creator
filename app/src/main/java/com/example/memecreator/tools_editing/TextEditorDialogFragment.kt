@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memecreator.R
 import com.example.memecreator.ui.MemeActivity
 
-
 class TextEditorDialogFragment : DialogFragment() {
     private var mAddTextEditText: EditText? = null
     private var mAddTextDoneTextView: TextView? = null
